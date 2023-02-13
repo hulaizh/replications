@@ -1,6 +1,6 @@
 *********************
 * link CRSP with Compustat
-import sas using "$data/crsp/ccmxpf_lnkused.sas7bdat", clear case(lower)	
+import sas using "./data/crsp/ccmxpf_lnkused.sas7bdat", clear case(lower)	
 keep if inlist(ulinktype,"LU","LC")
 keep if usedflag==1
 rename ugvkey gvkey
@@ -15,12 +15,12 @@ replace ulinkenddt=t1 if mi(ulinkenddt)
 keep gvkey permno ulinkdt ulinkenddt
 format ulinkdt ulinkenddt %td
 compress
-save ccmxpf_lnkused, replace
+save "./temp/ccmxpf_lnkused", replace
 
 
 ***********************************
 * clean compustat: get book equity, annually
-import sas using "$data/comp/funda.sas7bdat", clear case(lower)	
+import sas using "./data/comp/funda.sas7bdat", clear case(lower)	
 
 keep if indfmt=="INDL"
 keep if datafmt=="STD"
@@ -49,23 +49,23 @@ replace be=. if be<0
 keep gvkey datadate be sich
 format datadate %td
 
-save t1, replace
+save temp/t1, replace
 
 
-use t1, clear
+use temp/t1, clear
 
-joinby gvkey using ccmxpf_lnkused.dta
+joinby gvkey using "./temp/ccmxpf_lnkused"
 keep if datadate>=ulinkdt&datadate<=ulinkenddt
 drop ulinkdt ulinkenddt
 
-save funda, replace
+save "./temp/funda", replace
 
 
 
 
 ***********************************
 * clean compustat: get book equity, quarterly
-import sas using "$data/comp/fundq.sas7bdat", clear case(lower)	
+import sas using "./data/comp/fundq.sas7bdat", clear case(lower)	
 
 keep if indfmt=="INDL"
 keep if datafmt=="STD"
@@ -94,10 +94,10 @@ replace be=. if be<0
 keep gvkey datadate be sich
 format datadate %td
 
-save t1, replace
+save temp/t1, replace
 
 
-use t1, clear
+use temp/t1, clear
 
 joinby gvkey using ccmxpf_lnkused.dta
 keep if datadate>=ulinkdt&datadate<=ulinkenddt
