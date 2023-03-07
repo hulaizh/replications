@@ -1,1 +1,0 @@
-The instrument was coded and distributed in Sawtooth Software. Please contact Jeffrey Shrader (jgs2103@columbia.edu) for Sawtooth files if you want to implement the experiment in the same software. See the online appendix for screenshots of the design. 
